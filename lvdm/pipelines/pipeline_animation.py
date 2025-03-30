@@ -51,6 +51,7 @@ class AnimationPipeline(DiffusionPipeline):
     def __init__(
         self,
         vae,
+        vae_dualref,
         text_encoder,
         image_encoder,
         image_projector,
@@ -62,6 +63,7 @@ class AnimationPipeline(DiffusionPipeline):
 
         self.register_modules(
             vae=vae,
+            vae_dualref=vae_dualref,
             text_encoder=text_encoder,
             image_encoder=image_encoder,
             image_projector=image_projector,
@@ -69,7 +71,10 @@ class AnimationPipeline(DiffusionPipeline):
             layer_controlnet=layer_controlnet,
             scheduler=scheduler,
         )
-        self.vae_scale_factor = 2 ** (len(self.vae.config.ddconfig["ch_mult"]) - 1)
+        if vae is not None:
+            self.vae_scale_factor = 2 ** (len(self.vae.config.ddconfig["ch_mult"]) - 1)
+        else:
+            self.vae_scale_factor = 2 ** (len(self.vae_dualref.config.ddconfig["ch_mult"]) - 1)
 
     def enable_sequential_cpu_offload(self, gpu_id=0):
         if is_accelerate_available():
@@ -79,7 +84,7 @@ class AnimationPipeline(DiffusionPipeline):
 
         device = torch.device(f"cuda:{gpu_id}")
 
-        for cpu_offloaded_model in [self.unet, self.layer_encoder, self.text_encoder, self.vae]:
+        for cpu_offloaded_model in [self.unet, self.layer_encoder, self.text_encoder, self.vae, self.vae_dualref]:
             if cpu_offloaded_model is not None:
                 cpu_offload(cpu_offloaded_model, device)
 
@@ -183,10 +188,12 @@ class AnimationPipeline(DiffusionPipeline):
         num_videos_per_prompt,
         do_classifier_free_guidance
     ):
+        vae = self.vae if self.vae is not None else self.vae_dualref
+
         batch_size, n_layers = layer_masks.shape[:2]
         # Frame decomposition
         layer_regions = rearrange(layer_regions, "b n f c h w -> (b n f) c h w")
-        keyframe_layer_latents = self.vae.encode(layer_regions)[0].sample() * 0.18215
+        keyframe_layer_latents = vae.encode(layer_regions)[0].sample() * 0.18215
         keyframe_layer_latents = rearrange(keyframe_layer_latents, "(b n f) c h w -> b n f c h w", b=batch_size, n=n_layers)
         layer_latents_shape = list(keyframe_layer_latents.shape)
         layer_latents_shape[2] = video_length
@@ -222,7 +229,7 @@ class AnimationPipeline(DiffusionPipeline):
         layer_validity = torch.repeat_interleave(layer_validity, num_videos_per_prompt, dim=0)
 
         sketches = rearrange(sketches, 'b n f c h w -> (b n f) c h w')
-        layer_sketch_latents = self.vae.encode(sketches)[0].sample() * 0.18215
+        layer_sketch_latents = vae.encode(sketches)[0].sample() * 0.18215
         layer_sketch_latents = rearrange(layer_sketch_latents, '(b n f) c h w -> b n f c h w', b=batch_size, n=n_layers)
         layer_sketch_latents = torch.repeat_interleave(layer_sketch_latents, num_videos_per_prompt, dim=0)
 
@@ -249,7 +256,7 @@ class AnimationPipeline(DiffusionPipeline):
     def get_latent_z_with_hidden_states(self, videos):
         b, f, c, h, w = videos.shape
         x = rearrange(videos, 'b f c h w -> (b f) c h w')
-        encoder_posterior, hidden_states = self.vae.encode(x, return_hidden_states=True)
+        encoder_posterior, hidden_states = self.vae_dualref.encode(x, return_hidden_states=True)
         hidden_states_first_last = []
         ### use only the first and last hidden states
         for hid in hidden_states:
@@ -273,7 +280,6 @@ class AnimationPipeline(DiffusionPipeline):
         video_length = latents.shape[2]
         latents = 1 / 0.18215 * latents
         latents = rearrange(latents, "b c f h w -> (b f) c h w")
-        # video = self.vae.decode(latents).sample
         video = []
         for batch_idx in range(batch_size):
             video.append(self.vae.decode(latents[batch_idx * video_length:(batch_idx + 1) * video_length]).sample)
@@ -289,10 +295,9 @@ class AnimationPipeline(DiffusionPipeline):
         video_length = latents.shape[2]
         latents = 1 / 0.18215 * latents
         latents = rearrange(latents, "b c f h w -> (b f) c h w")
-        # video = self.vae.decode(latents).sample
         video = []
         for batch_idx in range(batch_size):
-            video.append(self.vae.decode(latents[batch_idx * video_length:(batch_idx + 1) * video_length].float(), ref_context=hidden_states, timesteps=video_length).sample)
+            video.append(self.vae_dualref.decode(latents[batch_idx * video_length:(batch_idx + 1) * video_length].float(), ref_context=hidden_states, timesteps=video_length).sample)
         video = torch.cat(video, dim=0)
         video = rearrange(video, "(b f) c h w -> b c f h w", f=video_length)
         video = (video / 2 + 0.5).clamp(0, 1)

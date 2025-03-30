@@ -16,6 +16,7 @@
 
 ## Updates
 
+- [25-03-30] Release a gradio script [app.py](scripts/app.py) to run the demo locally. Please raise an issue if you encounter any problems.
 - [25-03-22] Release the checkpoint and the inference script. **We update layer curation pipeline and support trajectory control for a flexible composition of various layer-level controls.**
 - [25-01-15] Release the project page and the arXiv preprint.
 
@@ -55,13 +56,24 @@ python scripts/animate_Layer.py --config scripts/demo4.yaml --savedir outputs/sa
 python scripts/animate_Layer.py --config scripts/demo5.yaml --savedir outputs/sample5
 ```
 
-Note that the layer-level controls are prepared in `__assets__/demos`. A more user-friendly interface with gradio will be uploaded in huggingface spaces soon.
+Note that the layer-level controls are prepared in `__assets__/demos`.
+
+### Run demo locally
+
+You can run the demo locally by executing the following command:
+
+```bash
+python scripts/app.py --savedir outputs/gradio
+```
+
+Then, open the link in your browser to access the demo interface. The output video and the video with trajectory will be saved in the `outputs/gradio` directory.
 
 ## Todo
 
 - [x] Release the code and checkpoint of LayerAnimate.
+- [x] Upload a gradio script to run the demo locally.
+- [ ] Create a online demo in the huggingface space.
 - [ ] Release checkpoints trained under single control modality with better performance.
-- [ ] Upload a gradio script and UI in huggingface spaces.
 - [ ] Release layer curation pipeline.
 - [ ] Training script for LayerAnimate.
 - [ ] DiT-based model LayerAnimate.

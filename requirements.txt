@@ -8,7 +8,8 @@ imageio==2.27.0
 imageio-ffmpeg==0.4.9
 decord==0.6.0
 omegaconf==2.3.0
-gradio==3.36.1
+gradio==5.23.0
+spaces==0.32.0
 open_clip_torch==2.22.0
 deepspeed
 opencv-python

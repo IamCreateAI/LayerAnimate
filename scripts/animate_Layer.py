@@ -48,20 +48,21 @@ def main(args):
     text_encoder      = FrozenOpenCLIPEmbedder().eval()
     image_encoder     = FrozenOpenCLIPImageEmbedderV2().eval()
     image_projector   = Resampler.from_pretrained(config.pretrained_model_path, subfolder="image_projector").eval()
+    vae, vae_dualref = None, None
     if mode == "interpolate":
-        vae           = AutoencoderKL_Dualref.from_pretrained(config.pretrained_model_path, subfolder="vae_dualref").eval()
+        vae_dualref   = AutoencoderKL_Dualref.from_pretrained(config.pretrained_model_path, subfolder="vae_dualref").eval()
     else:
         vae           = AutoencoderKL.from_pretrained(config.pretrained_model_path, subfolder="vae").eval()
     unet              = UNetModel.from_pretrained(config.pretrained_model_path, subfolder="unet").eval()
     layer_controlnet  = LayerControlNet.from_pretrained(config.pretrained_model_path, subfolder="layer_controlnet").eval()
 
     pipeline = AnimationPipeline(
-        vae=vae, text_encoder=text_encoder, image_encoder=image_encoder, image_projector=image_projector,
+        vae=vae, vae_dualref=vae_dualref, text_encoder=text_encoder, image_encoder=image_encoder, image_projector=image_projector,
         unet=unet, layer_controlnet=layer_controlnet,
         scheduler=scheduler,
     ).to(device=args.device, dtype=weight_dtype)
     if mode == "interpolate":
-        pipeline.vae.decoder.to(dtype=torch.float32)
+        pipeline.vae_dualref.decoder.to(dtype=torch.float32)
     if config.enable_xformers_memory_efficient_attention:
         if is_xformers_available():
             pipeline.enable_xformers_memory_efficient_attention()
