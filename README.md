@@ -8,6 +8,7 @@
 <a href='https://layeranimate.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a> &nbsp;
 <a href='https://www.bilibili.com/video/BV1EycqeaEqF/'><img src='https://img.shields.io/badge/BiliBili-Video-479fd1.svg'></a> &nbsp;
 <a href='https://youtu.be/b_bvVKigky4'><img src='https://img.shields.io/badge/Youtube-Video-b31b1b.svg'></a> &nbsp;
+<a href='https://huggingface.co/spaces/IamCreateAI/LayerAnimate'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face%20-Demo-blue'></a><br>
 
 
 <div align="center"> <img src='__assets__/figs/demos.gif'></img></div>
@@ -16,6 +17,7 @@
 
 ## Updates
 
+- [25-03-31] Release the online demo on [Hugging Face](https://huggingface.co/spaces/IamCreateAI/LayerAnimate).
 - [25-03-30] Release a gradio script [app.py](scripts/app.py) to run the demo locally. Please raise an issue if you encounter any problems.
 - [25-03-22] Release the checkpoint and the inference script. **We update layer curation pipeline and support trajectory control for a flexible composition of various layer-level controls.**
 - [25-01-15] Release the project page and the arXiv preprint.
@@ -72,7 +74,7 @@ Then, open the link in your browser to access the demo interface. The output vid
 
 - [x] Release the code and checkpoint of LayerAnimate.
 - [x] Upload a gradio script to run the demo locally.
-- [ ] Create a online demo in the huggingface space.
+- [x] Create a online demo in the huggingface space.
 - [ ] Release checkpoints trained under single control modality with better performance.
 - [ ] Release layer curation pipeline.
 - [ ] Training script for LayerAnimate.
