@@ -1,0 +1,15 @@
+prompt: A man skateboarding with a running dog.
+num_inference_steps: 25
+guidance_scale: 6.0
+seed: 289
+first_frame_path: __assets__/demos/realworld/first_frame.jpg
+layer:
+  - mask_path: __assets__/demos/realworld/layer_0.jpg
+    control_type: sketch
+    sketch_path: __assets__/demos/realworld/sketch.mp4
+  - mask_path: __assets__/demos/realworld/layer_1.jpg
+    control_type: trajectory
+    trajectory_path: __assets__/demos/realworld/trajectory_dog.json
+  - mask_path: __assets__/demos/realworld/layer_2.jpg
+    control_type: trajectory
+    trajectory_path: __assets__/demos/realworld/trajectory_bg.json

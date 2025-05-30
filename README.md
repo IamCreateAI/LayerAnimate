@@ -17,32 +17,40 @@
 
 ## Updates
 
+- [25-05-29] We have extended LayerAnimate to the DiT ([Wan2.1 1.3B](https://github.com/Wan-Video/Wan2.1)) variant, enabling the generation of 81 frames at 480 × 832 resolution. It performs surprisingly well in the [Real-World Domain](https://layeranimate.github.io/#real_world) shown in the project website.
 - [25-03-31] Release the online demo on [Hugging Face](https://huggingface.co/spaces/IamCreateAI/LayerAnimate).
 - [25-03-30] Release a gradio script [app.py](scripts/app.py) to run the demo locally. Please raise an issue if you encounter any problems.
 - [25-03-22] Release the checkpoint and the inference script. **We update layer curation pipeline and support trajectory control for a flexible composition of various layer-level controls.**
 - [25-01-15] Release the project page and the arXiv preprint.
 
-## Inference
-
-### Installation
+## Installation
 
 ```bash
 git clone git@github.com:IamCreateAI/LayerAnimate.git
 conda create -n layeranimate python=3.10 -y
 conda activate layeranimate
 pip install -r requirements.txt
+pip install wan@git+https://github.com/Wan-Video/Wan2.1  # If you want to use DiT variant.
 ```
 
-### Checkpoint preparation
+## Models
 
-Download the pretrained [layeranimate](https://huggingface.co/Yuppie1204/LayerAnimate-Mix) weights and put them in `checkpoints/` directory as follows:
+| Models                   | Download Link                                                                                                                                           | Video Size        |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| UNet variant | [Huggingface](https://huggingface.co/Yuppie1204/LayerAnimate-Mix) 🤗  | 16 x 320 x 512  |
+| DiT variant | [Huggingface](https://huggingface.co/Yuppie1204/LayerAnimate-DiT) 🤗  | 81 x 480 x 832  |
+
+Download the pretrained weights and put them in `checkpoints/` directory as follows:
 
 ```bash
 checkpoints/
-└─ LayerAnimate-Mix
+├─ LayerAnimate-Mix (UNet variant)
+└─ LayerAnimate-DiT
 ```
 
-### Inference script
+## Inference script
+
+### UNet variant (Paper version)
 
 Run the following command to generate a video from input images:
 
@@ -60,7 +68,7 @@ python scripts/animate_Layer.py --config scripts/demo5.yaml --savedir outputs/sa
 
 Note that the layer-level controls are prepared in `__assets__/demos`.
 
-### Run demo locally
+#### Run demo locally
 
 You can run the demo locally by executing the following command:
 
@@ -70,19 +78,29 @@ python scripts/app.py --savedir outputs/gradio
 
 Then, open the link in your browser to access the demo interface. The output video and the video with trajectory will be saved in the `outputs/gradio` directory.
 
+### DiT variant (Wan2.1 1.3B)
+
+Run the following command to generate a video from input images:
+
+```bash
+python scripts/infer_DiT.py --config __assets__/demos/realworld/config.yaml --savedir outputs/realworld
+```
+
+We take the `config.yaml` in `demos/realworld/` as an example. You can also modify the config file to suit your needs.
+
 ## Todo
 
 - [x] Release the code and checkpoint of LayerAnimate.
 - [x] Upload a gradio script to run the demo locally.
 - [x] Create a online demo in the huggingface space.
+- [x] DiT-based LayerAnimate.
 - [ ] Release checkpoints trained under single control modality with better performance.
 - [ ] Release layer curation pipeline.
 - [ ] Training script for LayerAnimate.
-- [ ] DiT-based model LayerAnimate.
 
 ## Acknowledgements
 
-We sincerely thank the great work [ToonCrafter](https://doubiiu.github.io/projects/ToonCrafter/), [LVCD](https://luckyhzt.github.io/lvcd), and [AniDoc](https://yihao-meng.github.io/AniDoc_demo/) for their inspiring work and contributions to the animation community.
+We sincerely thank the great work [ToonCrafter](https://doubiiu.github.io/projects/ToonCrafter/), [LVCD](https://luckyhzt.github.io/lvcd), [AniDoc](https://yihao-meng.github.io/AniDoc_demo/), and [Wan-Video](https://github.com/Wan-Video/Wan2.1) for their inspiring work and contributions to the AIGC community.
 
 ## Citation
 
