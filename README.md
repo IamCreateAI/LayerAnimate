@@ -10,6 +10,7 @@
 <a href='https://youtu.be/b_bvVKigky4'><img src='https://img.shields.io/badge/Youtube-Video-b31b1b.svg'></a> &nbsp;
 <a href='https://huggingface.co/spaces/IamCreateAI/LayerAnimate'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face%20-Demo-blue'></a><br>
 
+Official implementation of **LayerAnimate: Layer-level Control for Animation**, ICCV 2025
 
 <div align="center"> <img src='__assets__/figs/demos.gif'></img></div>
 
@@ -17,6 +18,7 @@
 
 ## Updates
 
+- [25-06-26] Our work is accepted by ICCV 2025! 🎉
 - [25-05-29] We have extended LayerAnimate to the DiT ([Wan2.1 1.3B](https://github.com/Wan-Video/Wan2.1)) variant, enabling the generation of 81 frames at 480 × 832 resolution. It performs surprisingly well in the [Real-World Domain](https://layeranimate.github.io/#real_world) shown in the project website.
 - [25-03-31] Release the online demo on [Hugging Face](https://huggingface.co/spaces/IamCreateAI/LayerAnimate).
 - [25-03-30] Release a gradio script [app.py](scripts/app.py) to run the demo locally. Please raise an issue if you encounter any problems.
