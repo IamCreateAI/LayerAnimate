@@ -18,12 +18,26 @@ Official implementation of **LayerAnimate: Layer-level Control for Animation**, 
 
 ## Updates
 
+- [25-08-22] Release the [Layer Curation Pipeline](https://github.com/YuxueYang1204/Layer-Curation-Pipeline), including the demo and comprehensive usage guidance.
 - [25-06-26] Our work is accepted by ICCV 2025! 🎉
 - [25-05-29] We have extended LayerAnimate to the DiT ([Wan2.1 1.3B](https://github.com/Wan-Video/Wan2.1)) variant, enabling the generation of 81 frames at 480 × 832 resolution. It performs surprisingly well in the [Real-World Domain](https://layeranimate.github.io/#real_world) shown in the project website.
 - [25-03-31] Release the online demo on [Hugging Face](https://huggingface.co/spaces/IamCreateAI/LayerAnimate).
 - [25-03-30] Release a gradio script [app.py](scripts/app.py) to run the demo locally. Please raise an issue if you encounter any problems.
 - [25-03-22] Release the checkpoint and the inference script. **We update layer curation pipeline and support trajectory control for a flexible composition of various layer-level controls.**
 - [25-01-15] Release the project page and the arXiv preprint.
+
+## Layer curation pipeline
+
+We have released [a comprehensive pipeline](https://github.com/YuxueYang1204/Layer-Curation-Pipeline) for extracting motion-based layers from video sequences. The layer curation pipeline automatically decomposes videos into different layers based on motion patterns, where you can control the number of extracted layers by adjusting the layer capacity parameter to obtain varying levels of motion granularity.
+
+More details can be found in the [repo](https://github.com/YuxueYang1204/Layer-Curation-Pipeline).
+
+| Input Videos | Layer Results |
+|:--:|:--:|
+| <video src="https://github.com/user-attachments/assets/d8e28bc4-541f-4b9f-bb95-379ebc83aa89"> | <video src="https://github.com/user-attachments/assets/464c8b53-71d6-4a68-80b4-e4b9b81bdf8a"> |
+| <video src="https://github.com/user-attachments/assets/89360155-622c-40cd-8619-07c14935e3d7"> | <video src="https://github.com/user-attachments/assets/39304b8d-a794-43d0-a271-2682958b9e82"> |
+| <video src="https://github.com/user-attachments/assets/da338346-5e6f-4cc8-8822-b76e715146e7"> | <video src="https://github.com/user-attachments/assets/b951f04c-3ce9-4eab-8aa9-a3eac625371e"> |
+| <video src="https://github.com/user-attachments/assets/4507d1fa-136f-4298-a58f-90082ebcaf4c"> | <video src="https://github.com/user-attachments/assets/575d7c2e-92d3-440d-93ee-fbcaba55aac9"> |
 
 ## Installation
 
@@ -96,8 +110,7 @@ We take the `config.yaml` in `demos/realworld/` as an example. You can also modi
 - [x] Upload a gradio script to run the demo locally.
 - [x] Create a online demo in the huggingface space.
 - [x] DiT-based LayerAnimate.
-- [ ] Release checkpoints trained under single control modality with better performance.
-- [ ] Release layer curation pipeline.
+- [x] Release layer curation pipeline.
 - [ ] Training script for LayerAnimate.
 
 ## Acknowledgements
